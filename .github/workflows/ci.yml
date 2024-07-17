@@ -27,6 +27,9 @@ jobs:
           - os: ubuntu-latest
             python-version: '3.8'
             archive-artifacts: true
+          - os: ubuntu-latest
+            python-version: '3.11'
+            flag-ignore-failure: true
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
