@@ -7,8 +7,9 @@ on:
       - .gitignore
   pull_request:
     types: [opened, reopened]
-  schedule:
-    - cron: '20 3 5,20 * *'
+  # current budget does not allow for scheduled builds
+  # schedule:
+  #   - cron: '20 3 5,20 * *'
 
 jobs:
   test:
