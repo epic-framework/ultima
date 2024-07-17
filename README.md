@@ -1,5 +1,5 @@
 # Ultima - intuitive parallel `map()` for Python
-[![Ultima CI](https://github.com/Cybereason/ultima/actions/workflows/ci.yml/badge.svg)](https://github.com/Cybereason/ultima/actions/workflows/ci.yml)
+[![Ultima CI](https://github.com/epic-framework/ultima/actions/workflows/ci.yml/badge.svg)](https://github.com/epic-framework/ultima/actions/workflows/ci.yml)
 
 ## What is it?
 
