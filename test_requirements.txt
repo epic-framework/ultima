@@ -1,5 +1,0 @@
-psutil
-pytest
-pytest-cov
-pytest-timeout
-pytest-repeat

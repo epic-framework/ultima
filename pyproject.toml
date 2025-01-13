@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "ultima"
+version = "1.2.0"
+description = "Intuitive parallel map calls for Python"
+authors = ["Yonatan Perry", "Assaf Ben-David", "Uri Sternfeld"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/epic-framework/ultima"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+dill = "*"
+
+[tool.poetry.group.test.dependencies]
+psutil = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-timeout = "*"
+pytest-repeat = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
