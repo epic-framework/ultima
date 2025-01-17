@@ -8,7 +8,7 @@ readme = "README.md"
 repository = "https://github.com/epic-framework/ultima"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 dill = "*"
 
 [tool.poetry.group.test.dependencies]
