@@ -11,7 +11,7 @@ import multiprocessing.managers
 import concurrent.futures
 from functools import partial
 from abc import ABC, abstractmethod
-from typing import Union, Type, TypeVar, Literal, Optional, overload
+from typing import TypeVar, Literal, overload, TypeAlias
 
 import dill
 
@@ -112,11 +112,11 @@ class Backend(ABC):
 
 
 BackendType = TypeVar('BackendType', bound=Backend)
-BackendArgument = Union[str, Backend, Type[Backend]]
+BackendArgument: TypeAlias = str | Backend | type[Backend]
 
 
 @overload
-def get_backend(name_or_backend: Union[BackendType, Type[BackendType]]) -> BackendType: ...
+def get_backend(name_or_backend: BackendType | type[BackendType]) -> BackendType: ...
 @overload
 def get_backend(name_or_backend: str) -> Backend: ...
 
@@ -205,7 +205,7 @@ class MultiprocessingBackend(Backend):
         Name of the multiprocessing context used by this backend.
     """
     NAME = "multiprocessing"
-    CONTEXT: Optional[str] = None
+    CONTEXT: str | None = None
 
     def __init__(self):
         self._manager = None
@@ -239,7 +239,7 @@ class MultiprocessingBackend(Backend):
         return sys.version_info >= (3, 9)
 
     @classmethod
-    def parse_n_workers(cls, n_workers: Union[int, float, None]) -> int:
+    def parse_n_workers(cls, n_workers: int | float | None) -> int:
         """
         Parse the `n_workers` parameters and return the actual number of workers to use.
 

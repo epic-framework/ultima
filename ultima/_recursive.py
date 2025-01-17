@@ -3,8 +3,9 @@ import time
 import queue
 import threading
 import multiprocessing as mp
+from typing import ClassVar, TypeVar, Generic
+from collections.abc import Iterable, Callable
 from multiprocessing.managers import SyncManager
-from typing import Dict, Tuple, Iterable, Callable, ClassVar, Optional, TypeVar, Generic
 
 from .args import Args
 from .backend import Backend, MultiprocessingBackend, ThreadingBackend, InlineBackend
@@ -17,13 +18,13 @@ S = TypeVar("S")
 def make_recursive(
         func: Callable[..., T],
         inputs: Iterable[S],
-        backend: Backend) -> Tuple[Callable[..., T], Iterable[S]]:
+        backend: Backend) -> tuple[Callable[..., T], Iterable[S]]:
     recursion = Recursion(func, inputs, backend)
     return recursion.func, recursion.inputs
 
 
 class Recursion(Generic[T, S]):
-    _MP_MANAGER: ClassVar[Optional[SyncManager]] = None
+    _MP_MANAGER: ClassVar[SyncManager | None] = None
 
     def __init__(self, func: Callable[..., T], inputs: Iterable[S], backend: Backend,
                  *, interval: float = 0.1):
@@ -100,8 +101,8 @@ class _SafeData:
     # when a backend gets GCed, its manager gets shut down and the data invalidates.
     def __init__(self, backend: Backend):
         # we avoid a lock by giving each process/thread combination its own counters
-        self._multi_queue_size: Dict[Tuple[int, int], int] = backend.dict()
-        self._multi_tasks_done: Dict[Tuple[int, int], int] = backend.dict()
+        self._multi_queue_size: dict[tuple[int, int], int] = backend.dict()
+        self._multi_tasks_done: dict[tuple[int, int], int] = backend.dict()
         self._tasks_scheduled = 0
         self._owner_key = None
 

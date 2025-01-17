@@ -1,9 +1,8 @@
 from math import ceil
 from functools import partial
-from collections.abc import Sized
 from concurrent.futures import BrokenExecutor
-from typing import Optional, Callable, Iterable, Iterator, List, \
-    Collection, Generic, TypeVar, TYPE_CHECKING, get_args, cast
+from typing import Generic, TypeVar, TYPE_CHECKING, get_args, cast
+from collections.abc import Sized, Iterable, Iterator, Collection, Callable
 
 from .bfr import BufferedFutureResolver, KeyedFuture
 from .args import Args
@@ -66,8 +65,8 @@ class Mapping(Generic[T]):
     logger = class_logger()
 
     def __init__(self, workforce: "Workforce", func: Callable, inputs: Iterable,
-                 ordered: bool = False, buffering: Optional[int] = None, batch_size: int = 1, errors: Error = 'raise',
-                 timeout: Optional[float] = None, return_key: ReturnKey = 'none'):
+                 ordered: bool = False, buffering: int | None = None, batch_size: int = 1, errors: Error = 'raise',
+                 timeout: float | None = None, return_key: ReturnKey = 'none'):
         assert errors in get_args(Error)
         assert return_key in get_args(ReturnKey)
         self.batch_size = batch_size
@@ -105,11 +104,11 @@ class Mapping(Generic[T]):
     def __iter__(self) -> Iterator[T]:
         return self._results
 
-    def _batch_inputs(self, inputs: Iterable[Args]) -> Iterable[List[Args]]:
+    def _batch_inputs(self, inputs: Iterable[Args]) -> Iterable[list[Args]]:
         return map(list, batches(inputs, self.batch_size))
 
     def _generate_keyed_futures(self, workforce: "Workforce", func_key: RegistryKey,
-                                input_batches: Iterable[List[Args]]) -> Iterable[KeyedFuture[list]]:
+                                input_batches: Iterable[list[Args]]) -> Iterable[KeyedFuture[list]]:
         if not workforce.active:
             return
         make_keys = partial(self._make_keys, return_key=self.return_key, batch_size=self.batch_size)

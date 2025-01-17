@@ -8,7 +8,6 @@ import signal
 import weakref
 import itertools
 import threading
-from typing import Optional
 from functools import partial
 from contextlib import contextmanager
 from concurrent.futures import BrokenExecutor
@@ -429,7 +428,7 @@ class TestInline:
     @pytest.mark.parametrize("batch_size", [1, 2])
     @pytest.mark.parametrize("errors", ['ignore', 'log', 'raise', 'return'])
     @pytest.mark.parametrize("timeout", [None, 10])
-    def test_inline_multi(self, ordered, buffering, batch_size, errors: Error, timeout: Optional[float]):
+    def test_inline_multi(self, ordered, buffering, batch_size, errors: Error, timeout: float | None):
         with Workforce('inline', n_workers=0) as workforce:
             result = sum(workforce.map(
                 Func.pow2, range(10), ordered=ordered, buffering=buffering, batch_size=batch_size, errors=errors,

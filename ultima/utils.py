@@ -4,7 +4,8 @@ Helpers and utilities.
 import logging
 import itertools
 import threading
-from typing import Iterable, TypeVar
+from typing import TypeVar
+from collections.abc import Iterable
 
 
 T = TypeVar('T')

@@ -1,5 +1,6 @@
 import hashlib
-from typing import Union, Callable, TypeVar, Iterator, Generic, Mapping, Dict
+from typing import TypeVar, Generic, TypeAlias
+from collections.abc import Callable, Iterator, Mapping
 
 from .backend import Backend
 
@@ -7,7 +8,7 @@ from .backend import Backend
 T = TypeVar("T")
 KT = TypeVar("KT")
 VT_co = TypeVar('VT_co', covariant=True)
-RegistryKey = Union[str, int]
+RegistryKey: TypeAlias = str | int
 
 
 class DeserializerMapping(Mapping[KT, VT_co]):
@@ -19,7 +20,7 @@ class DeserializerMapping(Mapping[KT, VT_co]):
     def __init__(self, items: Mapping[KT, T], deserializer: Callable[[T], VT_co]):
         self._items = items
         self._deserializer = deserializer
-        self._cache: Dict[KT, VT_co] = {}
+        self._cache: dict[KT, VT_co] = {}
 
     def __getitem__(self, key: KT) -> VT_co:
         if key not in self._cache:

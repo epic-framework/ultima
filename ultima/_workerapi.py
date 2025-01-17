@@ -6,7 +6,8 @@ import sys
 import signal
 import threading
 import traceback
-from typing import Iterable, Mapping, Callable, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from collections.abc import Iterable, Mapping, Callable
 
 from .args import Args
 from ._registry import RegistryKey
@@ -57,7 +58,7 @@ class WorkerAPI:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
 
     @staticmethod
-    def init_args(workforce: "Workforce") -> Tuple[int, Mapping[RegistryKey, Callable], int]:
+    def init_args(workforce: "Workforce") -> tuple[int, Mapping[RegistryKey, Callable], int]:
         """
         Get the required arguments for initialization of the worker.
         This is a convenience function.

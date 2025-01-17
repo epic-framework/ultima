@@ -1,7 +1,8 @@
 import time
 import threading
 import concurrent.futures
-from typing import Iterable, Iterator, Dict, Optional, Generic, TypeVar, Tuple, Any
+from typing import Generic, TypeVar, Any
+from collections.abc import Iterable, Iterator
 
 from .utils import class_logger
 
@@ -48,7 +49,7 @@ class BufferedFutureResolver(Generic[T]):
     logger = class_logger()
 
     def __init__(self, keyed_futures: Iterable[KeyedFuture[T]], abort_on_error: bool, ordered: bool,
-                 buffering: Optional[int] = None, timeout: Optional[float] = None, name: Optional[str] = None):
+                 buffering: int | None = None, timeout: float | None = None, name: str | None = None):
         self.logger.debug("created")
         self.keyed_futures = iter(keyed_futures)
         self.abort_on_error = abort_on_error
@@ -63,7 +64,7 @@ class BufferedFutureResolver(Generic[T]):
         self.lock = threading.Lock()
         self.evt_new_future = threading.Event()
         self.evt_new_capacity = threading.Event()
-        self.futures: Dict[concurrent.futures.Future, T] = {}
+        self.futures: dict[concurrent.futures.Future, T] = {}
 
         self.feeder_thread = threading.Thread(
             target=self._feeder_thread_impl,
@@ -71,7 +72,7 @@ class BufferedFutureResolver(Generic[T]):
             name=None if self.name is None else f"{self.name}-FeederThread"
         )
 
-    def __iter__(self) -> Iterator[Tuple[T, Any]]:
+    def __iter__(self) -> Iterator[tuple[T, Any]]:
         self._start_time = time.monotonic()
         self.feeder_thread.start()
         yield from self._futures_iter()
@@ -130,7 +131,7 @@ class BufferedFutureResolver(Generic[T]):
         return self.capacity is None or len(self.futures) < self.capacity
 
     # dev note: this core generator happens in the main thread
-    def _futures_iter(self) -> Iterable[Tuple[T, Any]]:
+    def _futures_iter(self) -> Iterable[tuple[T, Any]]:
         try:
             while (n_futures := len(self.futures)) or self.feeder_thread.is_alive() and self._feeder_error is None:
                 self._check_timeout()
@@ -175,7 +176,7 @@ class BufferedFutureResolver(Generic[T]):
         if self._feeder_error is not None:
             raise self._feeder_error
 
-    def _check_timeout(self) -> Optional[float]:
+    def _check_timeout(self) -> float | None:
         if self.timeout is None:
             return None
         elapsed = time.monotonic() - self._start_time
