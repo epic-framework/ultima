@@ -5,6 +5,8 @@ on:
     paths-ignore:
       - "*.md"
       - .gitignore
+    tags-ignore:
+      - "*"
   pull_request:
     types: [opened, reopened]
 
